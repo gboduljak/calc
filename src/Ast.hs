@@ -27,4 +27,4 @@ data Atom   = NumericAtom { number :: Double }
             | ExpAtom { innerExp :: Exp }
             deriving (Show)
 
-data ArithOp = Add | Sub | Mul | Div deriving (Show)
+data ArithOp = Add | Sub | Mul | Div deriving (Show, Eq)
