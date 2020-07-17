@@ -3,7 +3,6 @@ module Lexer
       lexicallyAnalyse
     ) 
 where
-
 import Data.Char (isDigit, isSpace)
 import Data.List (zip)
 import Data.Maybe
