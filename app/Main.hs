@@ -2,6 +2,7 @@ module Main where
 
 import Lexer (lexicallyAnalyse)
 import Tokens (Token, Token(..))
+import Parser
 
 main :: IO ()
 main = do

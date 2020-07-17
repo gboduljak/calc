@@ -1,0 +1,12 @@
+Exp   -> Term Exp'
+Exp'  -> + Term Exp'
+Exp'  -> - Term Exp'
+Exp'  -> ''
+Term  -> Factor Term'
+Term' -> * Factor Term' 
+Term' -> / Factor Term' 
+Term' -> ''
+Factor -> - Factor
+Factor -> Atom
+Atom -> num
+Atom -> ( Exp )
