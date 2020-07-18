@@ -16,9 +16,10 @@ import Ast (
 
 evaluate :: Exp -> Double
 evaluate TrivialExp = 0
-evaluate NontrivialExp { expTerm = term, expExp' = exp' } 
-  | isTrivialExp' exp'  = (evaluateTerm term)
-  | otherwise = evaluateTerm term + evaluateExp' exp'
+evaluate NontrivialExp { 
+  expTerm = term, 
+  expExp' = exp'
+} = evaluateTerm term + evaluateExp' exp'
 
 evaluateExp' :: Exp' -> Double
 evaluateExp' TrivialExp' = 0
@@ -26,57 +27,30 @@ evaluateExp' NontrivialExp' {
   exp'Op = op, 
   exp'Term = term, 
   exp'Exp' = rest 
-} | op == Add = evaluateTerm term + evaluateExp' rest
+} 
+  | op == Add = evaluateTerm term + evaluateExp' rest
   | op == Sub = - evaluateTerm term + evaluateExp' rest
 
 evaluateTerm :: Term -> Double
-evaluateTerm NontrivialTerm { termFactor = factor, termTerm' = term' } 
-  | isTrivialTerm' term' = (evaluateFactor factor)
-  | op == Mul            = (evaluateFactor factor) * (evaluateTerm innerTerm)
-  | op == Div            = (evaluateFactor factor) / (evaluateTerm innerTerm)
-  where op        = getTermOp term'
-        innerTerm = liftTerm term'
+evaluateTerm NontrivialTerm { 
+  termFactor = factor, 
+  termTerm' = term' 
+} = evaluateTerm' (evaluateFactor factor) term'
+
+evaluateTerm' :: Double -> Term' -> Double
+evaluateTerm' x TrivalTerm' = x
+evaluateTerm' x NontrivialTerm' { 
+  term'Op = op, 
+  term'Factor = factor, 
+  term'Term' = term' 
+} 
+  | op == Mul = evaluateTerm' (x * evaluateFactor factor) term'
+  | op == Div = evaluateTerm' (x / evaluateFactor factor) term'
 
 evaluateFactor :: Factor -> Double
 evaluateFactor NegativeFactor { innerFactor = factor } = - (evaluateFactor factor)
-evaluateFactor AtomicFactor { innerAtom = atom } = evaluateAtom atom
+evaluateFactor AtomicFactor { innerAtom = atom }       = evaluateAtom atom
 
 evaluateAtom :: Atom -> Double
 evaluateAtom NumericAtom { number = value } = value
-evaluateAtom ExpAtom { innerExp = exp } = evaluate exp
-
-getExpOp :: Exp' -> ArithOp
-getExpOp NontrivialExp' { 
-    exp'Op = op, 
-    exp'Term = _, 
-    exp'Exp' = _ 
-} = op
-
-getTermOp :: Term' -> ArithOp
-getTermOp NontrivialTerm' { 
-  term'Op = op, 
-  term'Factor = _, 
-  term'Term' = _
-} = op
-
-liftExp :: Exp' -> Exp
-liftExp NontrivialExp' { 
-    exp'Op = _, 
-    exp'Term = term , 
-    exp'Exp' = exp' 
-} = NontrivialExp { expTerm = term, expExp' = exp' } 
-
-liftTerm :: Term' -> Term
-liftTerm NontrivialTerm' {
-  term'Op = _, 
-  term'Factor = factor, 
-  term'Term' = term'
-} = NontrivialTerm { termFactor = factor, termTerm' = term' } 
-
-isTrivialExp' :: Exp' -> Bool
-isTrivialExp' TrivialExp' = True
-isTrivialExp' _           = False
-
-isTrivialTerm' :: Term' -> Bool
-isTrivialTerm' TrivalTerm' = True
-isTrivialTerm' _           = False
+evaluateAtom ExpAtom { innerExp = exp }     = evaluate exp
