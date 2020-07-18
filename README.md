@@ -45,6 +45,18 @@ Unit tests are written using Hspec and cover:
 
 ![demos.png](./readme-resources/demos.png)
 
+### A short algorithm description
+In order to perform expression evaluation, **calc** performs these steps in order:
+  1) lexically analyses the input string
+      - checks whether every character is a valid character and builds a stream of tokens
+  2) parses the stream of tokens produced by the previous step
+      - builds the expression syntax tree taking account for operator precedence, nested expressions ...
+  3) evaluates the expression tree produced from the previous step
+
+You can see how it is put together here:
+
+![execution-flow.png](./readme-resources/execution-flow.png)
+
 ### Implementation
 #### Lexical analysis
 The algorithm used for the lexical analysis is a handcoded implementation of a DFA with following states:
@@ -144,12 +156,16 @@ You can see the full implementation [here](https://github.com/gboduljak/calc/blo
 
 In order to build **calc** from the source, you will need a [Haskell stack](https://docs.haskellstack.org/en/stable/README/).
 
+ 
 #### Build
   1. Clone the project
   2. Run **stack build** in the root of the repository
       - This should automatically pull dependencies, compile and build calc executable
   3. Execute using **stack exec calc** in the root of the repository
 
+#### Run in interactive mode
+  1. Run **stack ghci** in the app folder of the repository
+  
 #### Test
   1. Run **stack test** in the root of the repository
   
