@@ -18,7 +18,8 @@ tests = fromList [
   (7, ("(3*(11)+(2)-3)", Just [OpenParens,Number 3.0,Operator '*',OpenParens,Number 11.0,CloseParens,Operator '+',OpenParens,Number 2.0,CloseParens,Operator '-',Number 3.0,CloseParens])),
   (8, ("-4.123*(-1)/(-10*(-2.1)^(-2))", Nothing)),
   (9, ("-.31323+()", Nothing)),
-  (10, ("(1 + 2) * (5 - (4 / 2))", Just [OpenParens,Number 1.0,Operator '+',Number 2.0,CloseParens,Operator '*',OpenParens,Number 5.0,Operator '-',OpenParens,Number 4.0,Operator '/',Number 2.0,CloseParens,CloseParens]))]
+  (10, ("(1 + 2) * (5 - (4 / 2))", Just [OpenParens,Number 1.0,Operator '+',Number 2.0,CloseParens,Operator '*',OpenParens,Number 5.0,Operator '-',OpenParens,Number 4.0,Operator '/',Number 2.0,CloseParens,CloseParens])),
+  (11, ("50*87.-4", Nothing))]
 
 lexerSpec :: Spec
 lexerSpec = do
@@ -43,3 +44,5 @@ lexerSpec = do
       lexicallyAnalyse (fst (tests ! 9)) `shouldBe` (snd (tests ! 9))
     it "correctly lexically analyses #10" $ do
       lexicallyAnalyse (fst (tests ! 10)) `shouldBe` (snd (tests ! 10))
+    it "correctly lexically analyses #11" $ do
+      lexicallyAnalyse (fst (tests ! 11)) `shouldBe` (snd (tests ! 11))

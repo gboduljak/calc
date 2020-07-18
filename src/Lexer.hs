@@ -10,6 +10,7 @@ import Tokens (Token, Token(..))
 
 data LexerState = Start     | 
                   Digits    |
+                  DigitsDot |
                   Operators |
                   Parens    |
                   Error
@@ -37,8 +38,16 @@ consume [] Digits history tokens = consume [] Start [] ((Number number):tokens)
 consume input@(x:xs) Digits history tokens
   | isDigit x = consume xs Digits ((Digits, x) : history) tokens
   | isSpace x = consume xs Digits history tokens
-  | x == '.'  = consume xs Digits ((Digits, x) : history) tokens
+  | x == '.'  = consume xs DigitsDot ((Digits, x) : history) tokens
   | otherwise = consume input Start [] ((Number number):tokens)
+  where number = read (historyAsStr history) :: Double
+
+consume [] DigitsDot history tokens = consume [] Start [] ((Number number):tokens)
+  where number = read (historyAsStr history) :: Double
+consume input@(x:xs) DigitsDot history tokens
+  | isDigit x = consume xs Digits ((DigitsDot, x) : history) tokens
+  | isSpace x = consume xs Digits history tokens
+  | otherwise = Nothing
   where number = read (historyAsStr history) :: Double
 
 consume [] Operators history tokens = consume [] Start [] ((Operator operator):tokens)
