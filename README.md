@@ -1,4 +1,11 @@
 # calc
+### Table of Contents
+
+1. [Introduction](#introduction)
+2. [A few examples](#a-few-examples)
+3. [Implementation](#implementation)
+4. [Setup & Dependencies](#setup--dependencies)
+5. [Possible improvements](#possible-improvements)
 
 ### Introduction
 **calc** is a simple console calculator written in Haskell. So far it supports the following expression types:
@@ -156,7 +163,6 @@ You can see the full implementation [here](https://github.com/gboduljak/calc/blo
 ### Setup & Dependencies
 
 In order to build **calc** from the source, you will need a [Haskell stack](https://docs.haskellstack.org/en/stable/README/).
-
  
 #### Build
   1. Clone the project
