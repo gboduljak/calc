@@ -3,7 +3,7 @@ module Parser
       parse
     ) 
 where
-import Data.List (head, tail)
+import Data.List (tail)
 import Tokens (Token, Token(..))
 import Ast (      
   Exp, Exp(..), 
@@ -15,8 +15,10 @@ import Ast (
   ArithOp, ArithOp(..))
 
 parse :: [Token] -> Maybe Exp 
-parse tokens = exp
-  where (exp, _) = parseExp tokens 
+parse tokens 
+  | remainingTokens == [] = exp
+  | otherwise = Nothing
+  where (exp, remainingTokens) = parseExp tokens 
 
 parseExp :: [Token] -> (Maybe Exp, [Token])
 parseExp [] = (Just TrivialExp,[])
@@ -134,8 +136,8 @@ parseAtom tokens@(lookahead : rest)
   | (Tokens.Number value) <- lookahead = parse' 'n'
   | OpenParens <- lookahead = parse' '('
   | otherwise = (Nothing, tokens)
-  where parse' look | look == 'n' = (liftNumericAtom value, rest)
-                    | look == '(' = (liftExpAtom exp, tail expRest)
+  where parse' look | look == 'n'                  = (liftNumericAtom value, rest)
+                    | look == '(' && expRest /= [] = (liftExpAtom exp, tail expRest)
                     | otherwise   = (Nothing, tokens)
                     where (exp, expRest)  = parseExp rest
                           (Tokens.Number value) = lookahead
