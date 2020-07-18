@@ -52,9 +52,10 @@ In order to perform expression evaluation, **calc** performs these steps in orde
   2) parses the stream of tokens produced by the previous step
       - builds the expression syntax tree taking account for operator precedence, nested expressions ...
   3) evaluates the expression tree produced from the previous step
+  
+Everything is put together [here](https://github.com/gboduljak/calc/blob/master/app/Main.hs).
 
-You can see how it is put together here:
-
+You can see how it works in the interactive mode here:
 ![execution-flow.png](./readme-resources/execution-flow.png)
 
 ### Implementation
@@ -70,7 +71,7 @@ data LexerState = Start     |
                   Error
                   deriving (Show)
 ```
-You can see the implementation [here](https://github.com/gboduljak/calc/blob/master/src/Lexer.hs).
+You can see the full implementation [here](https://github.com/gboduljak/calc/blob/master/src/Lexer.hs).
 #### Parsing
 The expression tree which we are going to use is a direct implementation of above described grammar and is implemented using algebraic data types:
 
