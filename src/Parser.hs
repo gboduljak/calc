@@ -137,15 +137,15 @@ parseAtom tokens@(lookahead : rest)
   | (Tokens.Number value) <- lookahead = parse' 'n'
   | OpenParens            <- lookahead = parse' '('
   | otherwise                          = (Nothing, tokens)
-  where parse' look | look == 'n'                  = (liftNumericAtom value, rest)
-                    | look == '(' && expRest /= [] = (liftExpAtom exp, tail expRest)
+  where parse' look | look == 'n'                  = (liftIntoNumericAtom value, rest)
+                    | look == '(' && expRest /= [] = (liftIntoExpAtom exp, tail expRest)
                     | otherwise                    = (Nothing, tokens)
                     where (exp, expRest)        = parseExp rest
                           (Tokens.Number value) = lookahead
 
-liftNumericAtom :: Double -> Maybe Atom
-liftNumericAtom value = Just NumericAtom { number = value }
+liftIntoNumericAtom :: Double -> Maybe Atom
+liftIntoNumericAtom value = Just NumericAtom { number = value }
 
-liftExpAtom :: Maybe Exp -> Maybe Atom
-liftExpAtom (Just exp) = Just ExpAtom { innerExp = exp }
-liftExpAtom _          = Nothing
+liftIntoExpAtom :: Maybe Exp -> Maybe Atom
+liftIntoExpAtom (Just exp) = Just ExpAtom { innerExp = exp }
+liftIntoExpAtom _          = Nothing
