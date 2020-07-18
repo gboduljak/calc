@@ -25,3 +25,4 @@ main = do
               putStrLn (show result)
           Nothing -> putStrLn "The input expression is not semantically valid!"
     Nothing -> putStrLn "The input expression is not lexically valid!"
+    
