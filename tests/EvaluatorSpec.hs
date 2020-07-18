@@ -42,9 +42,11 @@ tests = fromList [
   (11, ((parsed . lexed) " ( 1 + 2) * (2 + 3) + (4 * 5) + (6 * 7) / ((5 -2) * (2 +4))", 37.33333333333333)),
   (12, ((parsed . lexed) "(1 + 2) * (5 - (4 / 2))", 9.0)),
   (13, ((parsed . lexed) "- (3 + (4 / 2)) * (- (4 + 2*4 - 1))", 55.0)),
-  (14, ((parsed . lexed) "(((3 - 2 + 3)/ (2 + 1) + 2 - 4)*(4/ (2 + 1)))", -0.88888888888888)),
+  (14, ((parsed . lexed) "(((3 - 2 + 3)/ (2 + 1) + 2 - 4)*(4/ (2 + 1)))", -0.888888888888889)),
   (15, ((parsed . lexed) "((2 * 3 + 1) * (1 + 2 -5)) + 4", -10.0)),
-  (16, ((parsed . lexed) "1 + 2 - 3 - 4", -4.0))]
+  (16, ((parsed . lexed) "1 + 2 - 3 - 4", -4.0)),
+  (17, ((parsed . lexed) "1 - 4*2 - 3 - 4", -14.0)),
+  (18, ((parsed . lexed) "3+4*2/(1−5)*2-3", -14.0))]
 
 evaluatorSpec :: Spec
 evaluatorSpec = do
@@ -81,3 +83,5 @@ evaluatorSpec = do
       evaluate (fst (tests ! 15)) `shouldBe` (snd (tests ! 15))
     it "correctly evaluates #16" $ do
       evaluate (fst (tests ! 16)) `shouldBe` (snd (tests ! 16))
+    it "correctly evaluates #17" $ do
+      evaluate (fst (tests ! 17)) `shouldBe` (snd (tests ! 17))

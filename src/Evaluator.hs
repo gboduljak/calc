@@ -18,10 +18,16 @@ evaluate :: Exp -> Double
 evaluate TrivialExp = 0
 evaluate NontrivialExp { expTerm = term, expExp' = exp' } 
   | isTrivialExp' exp'  = (evaluateTerm term)
-  | op == Add           = (evaluateTerm term) + (evaluate innerExp)
-  | op == Sub           = (evaluateTerm term) - (evaluate innerExp)
-  where op       = getExpOp exp'
-        innerExp = liftExp  exp'
+  | otherwise = evaluateTerm term + evaluateExp' exp'
+
+evaluateExp' :: Exp' -> Double
+evaluateExp' TrivialExp' = 0
+evaluateExp' NontrivialExp' { 
+  exp'Op = op, 
+  exp'Term = term, 
+  exp'Exp' = rest 
+} | op == Add = evaluateTerm term + evaluateExp' rest
+  | op == Sub = - evaluateTerm term + evaluateExp' rest
 
 evaluateTerm :: Term -> Double
 evaluateTerm NontrivialTerm { termFactor = factor, termTerm' = term' } 
