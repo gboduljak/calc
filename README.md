@@ -1,7 +1,7 @@
 # calc
 
 ### Introduction
-**calc** is a simple console calculator written in Haskell. So far it covers following expression types:
+**calc** is a simple console calculator written in Haskell. So far it supports the following expression types:
 
 - Basic arithmetic +, -, *, / 
   - Example : 1 + 2 * 3
@@ -10,7 +10,7 @@
 - Unary minus:
   - Example : -(-(2+3))
 
-Expressions can have arbitrary number of whitespaces between characters and will be computed correctly provided they are lexically and semantically valid. 
+Expressions can have the arbitrary number of whitespaces between characters and will be computed correctly as long as they are lexically and semantically valid. 
  
 Here is a complete supported grammar in Backus–Naur form:
 
@@ -32,14 +32,14 @@ Atom -> Number
 The implementation consists of :
 - Encoding arithmetic expressions as a stream of tokens [(see Tokens.hs)](https://github.com/gboduljak/calc/blob/master/src/Tokens.hs)
 - Encoding arithmetic expressions as an abstract syntax tree [(see Ast.hs)](https://github.com/gboduljak/calc/blob/master/src/Ast.hs)
-- Lexical analysis (see Lexer.hs)
-- Parsing a stream of tokens (see Parser.hs)
-- Evaluation of a valid abstract syntax tree (see Evaluator.hs)
+- Lexical analysis [(see Lexer.hs)](https://github.com/gboduljak/calc/blob/master/src/Lexer.hs)
+- Parsing a stream of tokens [(see Parser.hs)](https://github.com/gboduljak/calc/blob/master/src/Parser.hs)
+- Evaluation of a valid abstract syntax tree [(see Evaluator.hs)](https://github.com/gboduljak/calc/blob/master/src/Evaluator.hs)
 
 Unit tests are written using Hspec and cover:
- - Lexical analysis (see LexerSpec.hs)
- - Parsing (see ParserSpec.hs)
- - Evaluation (see EvaluatorSpec.hs)
+ - Lexical analysis [(see LexerSpec.hs)](https://github.com/gboduljak/calc/blob/master/tests/LexerSpec.hs)
+ - Parsing [(see ParserSpec.hs)](https://github.com/gboduljak/calc/blob/master/tests/ParserSpec.hs)
+ - Evaluation [(see EvaluatorSpec.hs)](https://github.com/gboduljak/calc/blob/master/tests/EvaluatorSpec.hs)
  
 ### A few examples
 
