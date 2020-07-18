@@ -30,8 +30,8 @@ Atom -> Number
 ```
       
 The implementation consists of :
-- Encoding arithmetic expressions as a stream of tokens (see Tokens.hs)
-- Encoding arithmetic expressions as an abstract syntax tree (see Ast.hs)
+- Encoding arithmetic expressions as a stream of tokens [(see Tokens.hs)](https://github.com/gboduljak/calc/blob/master/src/Tokens.hs)
+- Encoding arithmetic expressions as an abstract syntax tree [(see Ast.hs)](https://github.com/gboduljak/calc/blob/master/src/Ast.hs)
 - Lexical analysis (see Lexer.hs)
 - Parsing a stream of tokens (see Parser.hs)
 - Evaluation of a valid abstract syntax tree (see Evaluator.hs)
@@ -58,7 +58,7 @@ data LexerState = Start     |
                   Error
                   deriving (Show)
 ```
-
+You can see the implementation [here](https://github.com/gboduljak/calc/blob/master/src/Lexer.hs).
 #### Parsing
 The expression tree which we are going to use is a direct implementation of above described grammar and is implemented using algebraic data types:
 
@@ -121,6 +121,8 @@ parseExp tokens@(lookahead : rest)
                     where (term, termRest)   = parseTerm tokens
                           (exp', resultRest) = parseExp' termRest
 ```
+You can see the full implementation [here](https://github.com/gboduljak/calc/blob/master/src/Parser.hs).
+
 #### Evaluation
 Evaluation is performed using a simple inorder tree walk which is implemented as a set of mutually recursive expressions which destruct abstract syntax tree.
 An example of such expression is here:
@@ -136,6 +138,7 @@ evaluateExp' NontrivialExp' {
   | op == Add = evaluateTerm term + evaluateExp' rest
   | op == Sub = - evaluateTerm term + evaluateExp' rest
 ```
+You can see the full implementation [here](https://github.com/gboduljak/calc/blob/master/src/Evaluator.hs).
 
 ### Setup & Dependencies
 
