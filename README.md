@@ -149,8 +149,12 @@ In order to build **calc** from the source, you will need a [Haskell stack](http
 
 #### Test
   1. Run **stack test** in the root of the repository
-  You should get something like this...
   
+You should get something like this:
+
+![tests.png](./readme-resources/tests.png)
+
+
 #### Install
 If you want to use it in your console without running **stack exec calc** every time, it is possible to install it using **stack install** command in the root of the repository. 
 After that, **calc** should be available for a direct use such as: calc 1 + 2
