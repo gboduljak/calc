@@ -70,11 +70,11 @@ You can see how it works in the interactive mode here:
 The algorithm used for the lexical analysis is a handcoded implementation of a DFA with following states:
 
 ``` Haskell
-data LexerState = Start     | 
-                  Digits    |
-                  DigitsDot |
-                  Operators |
-                  Parens    |
+data LexerState = Start          | 
+                  Digits         |
+                  DigitsAfterDot |
+                  Operators      |
+                  Parens         |
                   Error
                   deriving (Show)
 ```
