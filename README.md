@@ -1,7 +1,14 @@
 # calc
+### Table of Contents
+
+1. [Introduction](#introduction)
+2. [A few examples](#a-few-examples)
+3. [Implementation](#implementation)
+4. [Setup & Dependencies](#setup--dependencies)
+5. [Possible improvements](#possible-improvements)
 
 ### Introduction
-**calc** is a simple console calculator written in Haskell. So far it covers following expression types:
+**calc** is a simple console calculator written in Haskell. So far it supports the following expression types:
 
 - Basic arithmetic +, -, *, / 
   - Example : 1 + 2 * 3
@@ -10,7 +17,7 @@
 - Unary minus:
   - Example : -(-(2+3))
 
-Expressions can have arbitrary number of whitespaces between characters and will be computed correctly provided they are lexically and semantically valid. 
+Expressions can have the arbitrary number of whitespaces between characters and will be computed correctly as long as they are lexically and semantically valid. 
  
 Here is a complete supported grammar in Backus–Naur form:
 
@@ -30,20 +37,33 @@ Atom -> Number
 ```
       
 The implementation consists of :
-- Encoding arithmetic expressions as a stream of tokens (see Tokens.hs)
-- Encoding arithmetic expressions as an abstract syntax tree (see Ast.hs)
-- Lexical analysis (see Lexer.hs)
-- Parsing a stream of tokens (see Parser.hs)
-- Evaluation of a valid abstract syntax tree (see Evaluator.hs)
+- Encoding arithmetic expressions as a stream of tokens [(see Tokens.hs)](https://github.com/gboduljak/calc/blob/master/src/Tokens.hs)
+- Encoding arithmetic expressions as an abstract syntax tree [(see Ast.hs)](https://github.com/gboduljak/calc/blob/master/src/Ast.hs)
+- Lexical analysis [(see Lexer.hs)](https://github.com/gboduljak/calc/blob/master/src/Lexer.hs)
+- Parsing a stream of tokens [(see Parser.hs)](https://github.com/gboduljak/calc/blob/master/src/Parser.hs)
+- Evaluation of a valid abstract syntax tree [(see Evaluator.hs)](https://github.com/gboduljak/calc/blob/master/src/Evaluator.hs)
 
 Unit tests are written using Hspec and cover:
- - Lexical analysis (see LexerSpec.hs)
- - Parsing (see ParserSpec.hs)
- - Evaluation (see EvaluatorSpec.hs)
+ - Lexical analysis [(see LexerSpec.hs)](https://github.com/gboduljak/calc/blob/master/tests/LexerSpec.hs)
+ - Parsing [(see ParserSpec.hs)](https://github.com/gboduljak/calc/blob/master/tests/ParserSpec.hs)
+ - Evaluation [(see EvaluatorSpec.hs)](https://github.com/gboduljak/calc/blob/master/tests/EvaluatorSpec.hs)
  
 ### A few examples
 
 ![demos.png](./readme-resources/demos.png)
+
+### A short algorithm description
+In order to perform expression evaluation, **calc** performs these steps in order:
+  1) lexically analyses the input string
+      - checks whether every character is a valid character and builds a stream of tokens
+  2) parses the stream of tokens produced by the previous step
+      - builds the expression syntax tree taking account for operator precedence, nested expressions ...
+  3) evaluates the expression tree produced from the previous step
+  
+Everything is put together [here](https://github.com/gboduljak/calc/blob/master/app/Main.hs).
+
+You can see how it works in the interactive mode here:
+![execution-flow.png](./readme-resources/execution-flow.png)
 
 ### Implementation
 #### Lexical analysis
@@ -58,7 +78,7 @@ data LexerState = Start     |
                   Error
                   deriving (Show)
 ```
-
+You can see the full implementation [here](https://github.com/gboduljak/calc/blob/master/src/Lexer.hs).
 #### Parsing
 The expression tree which we are going to use is a direct implementation of above described grammar and is implemented using algebraic data types:
 
@@ -121,6 +141,8 @@ parseExp tokens@(lookahead : rest)
                     where (term, termRest)   = parseTerm tokens
                           (exp', resultRest) = parseExp' termRest
 ```
+You can see the full implementation [here](https://github.com/gboduljak/calc/blob/master/src/Parser.hs).
+
 #### Evaluation
 Evaluation is performed using a simple inorder tree walk which is implemented as a set of mutually recursive expressions which destruct abstract syntax tree.
 An example of such expression is here:
@@ -136,21 +158,29 @@ evaluateExp' NontrivialExp' {
   | op == Add = evaluateTerm term + evaluateExp' rest
   | op == Sub = - evaluateTerm term + evaluateExp' rest
 ```
+You can see the full implementation [here](https://github.com/gboduljak/calc/blob/master/src/Evaluator.hs).
 
 ### Setup & Dependencies
 
 In order to build **calc** from the source, you will need a [Haskell stack](https://docs.haskellstack.org/en/stable/README/).
-
+ 
 #### Build
   1. Clone the project
   2. Run **stack build** in the root of the repository
       - This should automatically pull dependencies, compile and build calc executable
   3. Execute using **stack exec calc** in the root of the repository
 
+#### Run in interactive mode
+  1. Run **stack ghci** in the app folder of the repository
+  
 #### Test
   1. Run **stack test** in the root of the repository
-  You should get something like this...
   
+You should get something like this:
+
+![tests.png](./readme-resources/tests.png)
+
+
 #### Install
 If you want to use it in your console without running **stack exec calc** every time, it is possible to install it using **stack install** command in the root of the repository. 
 After that, **calc** should be available for a direct use such as: calc 1 + 2
