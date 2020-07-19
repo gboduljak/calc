@@ -8,11 +8,11 @@ import Data.List (zip)
 import Data.Maybe
 import Tokens (Token, Token(..))
 
-data LexerState = Start     | 
-                  Digits    |
-                  DigitsDot |
-                  Operators |
-                  Parens    |
+data LexerState = Start          | 
+                  Digits         |
+                  DigitsAfterDot |
+                  Operators      |
+                  Parens         |
                   Error
                   deriving (Show)
 
@@ -38,17 +38,19 @@ consume [] Digits history tokens = consume [] Start [] ((Number number):tokens)
 consume input@(x:xs) Digits history tokens
   | isDigit x = consume xs Digits ((Digits, x) : history) tokens
   | isSpace x = consume xs Digits history tokens
-  | x == '.'  = consume xs DigitsDot ((Digits, x) : history) tokens
+  | x == '.'  = consume xs DigitsAfterDot ((Digits, x) : history) tokens
   | otherwise = consume input Start [] ((Number number):tokens)
   where number = read (historyAsStr history) :: Double
 
-consume [] DigitsDot history tokens = consume [] Start [] ((Number number):tokens)
+consume [] DigitsAfterDot history tokens = consume [] Start [] ((Number number):tokens)
   where number = read (historyAsStr history) :: Double
-consume input@(x:xs) DigitsDot history tokens
-  | isDigit x = consume xs Digits ((DigitsDot, x) : history) tokens
-  | isSpace x = consume xs Digits history tokens
-  | otherwise = Nothing
-  where number = read (historyAsStr history) :: Double
+consume input@(x:xs) DigitsAfterDot history tokens
+  | isDigit x       = consume xs DigitsAfterDot ((DigitsAfterDot, x) : history) tokens
+  | isSpace x       = consume xs DigitsAfterDot history tokens
+  | prevChar == '.' = Nothing
+  | otherwise       = consume input Start [] ((Number number):tokens)
+  where (_, prevChar) = head history
+        number        = read (historyAsStr history) :: Double 
 
 consume [] Operators history tokens = consume [] Start [] ((Operator operator):tokens)
   where operator = (head . historyAsStr) history
@@ -69,7 +71,7 @@ consume input Parens history tokens = consume input Start [] (parensToken:tokens
             ')' -> CloseParens
 
 consume [] state history tokens = Just (reverse tokens)
-consume _ _ _ _ = Nothing
+consume _ _ _ _                 = Nothing
 
 historyAsStr :: [(LexerState, Char)] -> String
 historyAsStr history = reverse [ x | (state, x) <- history ]
